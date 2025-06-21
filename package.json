@@ -1,0 +1,36 @@
+{
+	"name": "geo-polis",
+	"module": "src/app.ts",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "bun --watch src/app.ts",
+		"start": "bun src/app.ts",
+		"discord:push": "bun src/lib/pushCommands.ts",
+		"db:migrate": "bun src/migrate.ts",
+		"db:create": "bun src/lib/createDbFile.ts"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@libsql/client": "^0.15.9",
+		"@types/bun": "latest",
+		"drizzle-kit": "^0.31.1"
+	},
+	"peerDependencies": {
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"@bull-board/api": "^6.10.1",
+		"@bull-board/hono": "^6.10.1",
+		"better-auth": "^1.2.9",
+		"bullmq": "^5.54.2",
+		"cheerio": "^1.1.0",
+		"date-fns": "^4.1.0",
+		"discord.js": "^14.20.0",
+		"drizzle-orm": "^0.44.2",
+		"drizzle-zod": "^0.8.2",
+		"hono": "^4.8.0",
+		"ioredis": "^5.6.1",
+		"zod": "^3.25.67"
+	}
+}

@@ -1,0 +1,54 @@
+services:
+  redis:
+    image: redis:7.4-alpine
+    container_name: hono-redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hono-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - APPLICATION_ID=${APPLICATION_ID}
+      - PUBLIC_KEY=${PUBLIC_KEY}
+      - TOKEN=${TOKEN}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - DB_FILE_NAME=${DB_FILE_NAME}
+      - DB_URL=${DB_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - NOTIFICATION_ROLE_NAME=${NOTIFICATION_ROLE_NAME}
+      - VERIFIED_ROLE_NAME=${VERIFIED_ROLE_NAME}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - GUILD_ID=${GUILD_ID}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - HONO_PORT=${HONO_PORT}
+      - ALLOW_SIGNUP=${ALLOW_SIGNUP}
+      - DEPLOYED_URL=${DEPLOYED_URL}
+    volumes:
+      - sqlite_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  sqlite_data:
