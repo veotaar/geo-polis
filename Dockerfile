@@ -20,12 +20,6 @@ FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /app .
 
-RUN addgroup --system --gid 1001 bunuser
-RUN adduser --system --uid 1001 bunuser
-RUN chown -R bunuser:bunuser /app
-USER bunuser
-
+USER bun
 EXPOSE 3000/tcp
-
-# Run the app
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["bun", "run", "start"]

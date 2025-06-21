@@ -5,10 +5,11 @@
 	"private": true,
 	"scripts": {
 		"dev": "bun --watch src/app.ts",
-		"start": "bun src/app.ts",
+		"start": "bun db:push && bun src/app.ts",
 		"discord:push": "bun src/lib/pushCommands.ts",
 		"db:migrate": "bun src/migrate.ts",
-		"db:create": "bun src/lib/createDbFile.ts"
+		"db:create": "bun src/lib/createDbFile.ts",
+		"db:push": "bunx drizzle-kit generate && bunx drizzle-kit push"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
