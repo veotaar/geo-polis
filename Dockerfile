@@ -14,11 +14,11 @@ FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
-RUN mkdir -p /app/data
-
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /app .
+
+RUN mkdir -p /app/data && chown -R bun:bun /app/data
 
 USER bun
 EXPOSE 3000/tcp
