@@ -27,7 +27,19 @@ const rest = new REST({ version: "10" }).setToken(env.TOKEN);
 try {
 	console.log("Started refreshing application (/) commands.");
 
-	await rest.put(Routes.applicationCommands(env.CLIENT_ID), { body: commands });
+	// const result = await rest.put(Routes.applicationCommands(env.CLIENT_ID), {
+	// 	body: commands,
+	// });
+
+	// using guild update when global update by discrod takes too long
+	const result = await rest.put(
+		Routes.applicationGuildCommands(env.CLIENT_ID, env.GUILD_ID),
+		{
+			body: commands,
+		},
+	);
+
+	console.log(result);
 
 	console.log("Successfully reloaded application (/) commands.");
 } catch (error) {

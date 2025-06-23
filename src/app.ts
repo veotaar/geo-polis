@@ -18,6 +18,7 @@ import { auth } from "./lib/auth";
 
 import { loginPage } from "./templates/login";
 import { signupPage } from "./templates/signup";
+import { suspectView } from "./templates/suspectView";
 
 import env from "../env";
 
@@ -55,7 +56,7 @@ app.get("/login", async (c) => {
 	});
 
 	if (session) {
-		return c.redirect("/bullboard");
+		return c.redirect("/list");
 	}
 
 	return c.html(loginPage());
@@ -67,7 +68,7 @@ app.get("/signup", async (c) => {
 	});
 
 	if (session) {
-		return c.redirect("/bullboard");
+		return c.redirect("/list");
 	}
 
 	return c.html(signupPage());
@@ -78,6 +79,20 @@ app.get("/logout", async (c) => {
 		headers: c.req.header(),
 	});
 	return c.redirect("/login");
+});
+
+app.get("/list", async (c) => {
+	const session = await auth.api.getSession({
+		headers: c.req.raw.headers,
+	});
+
+	if (!session) {
+		return c.redirect("/login");
+	}
+
+	const html = await suspectView();
+
+	return c.html(html);
 });
 
 app.use("/bullboard/*", async (c, next) => {
