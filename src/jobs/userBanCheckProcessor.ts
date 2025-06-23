@@ -3,17 +3,18 @@ import { db } from "../db";
 import { suspect } from "../db/schema";
 import { and, eq, gt } from "drizzle-orm";
 import { checkSuspect } from "../db/queries/suspect";
+import env from "../../env";
 
 export async function processUserBanCheck(job: Job) {
-	const tenDaysAgo = new Date(
-		Math.floor(Date.now() / 1000) - 10 * 24 * 60 * 60,
+	const someDaysAgo = new Date(
+		Math.floor(Date.now() / 1000) - env.DAY_THRESHOLD * 24 * 60 * 60,
 	);
 
 	// Get all non-banned users updated within last 10 days
 	const usersToCheck = await db
 		.select()
 		.from(suspect)
-		.where(and(eq(suspect.banned, false), gt(suspect.updatedAt, tenDaysAgo)));
+		.where(and(eq(suspect.banned, false), gt(suspect.updatedAt, someDaysAgo)));
 
 	job.log(`Found ${usersToCheck.length} users to check for ban status`);
 

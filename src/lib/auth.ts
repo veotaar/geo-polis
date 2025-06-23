@@ -8,7 +8,7 @@ import env from "../../env";
 export const auth = betterAuth({
 	hooks: {
 		after: createAuthMiddleware(async (ctx) => {
-			ctx.setHeader("HX-Redirect", "/bullboard");
+			ctx.setHeader("HX-Redirect", env.LOGIN_REDIRECT_ROUTE);
 		}),
 	},
 	database: drizzleAdapter(db, {

@@ -20,6 +20,8 @@ const EnvSchema = z.object({
 		.catch("false")
 		.transform((value) => value === "true" || value === "1"),
 	DEPLOYED_URL: z.url(),
+	DAY_THRESHOLD: z.coerce.number(),
+	LOGIN_REDIRECT_ROUTE: z.string(),
 });
 
 export type env = z.infer<typeof EnvSchema>;

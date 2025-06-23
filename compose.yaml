@@ -42,6 +42,8 @@ services:
       - HONO_PORT=${HONO_PORT}
       - ALLOW_SIGNUP=${ALLOW_SIGNUP}
       - DEPLOYED_URL=${DEPLOYED_URL}
+      - DAY_THRESHOLD=${DAY_THRESHOLD}
+      - LOGIN_REDIRECT_ROUTE=${LOGIN_REDIRECT_ROUTE}
     volumes:
       - sqlite_data:/app/data
     depends_on:
