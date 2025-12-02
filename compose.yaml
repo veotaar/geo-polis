@@ -6,13 +6,13 @@ services:
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
       - redis_data:/data
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 3s
       retries: 3
+    networks:
+      - hono-network
     restart: unless-stopped
 
   app:
@@ -20,8 +20,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hono-app
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=production
       - APPLICATION_ID=${APPLICATION_ID}
@@ -44,13 +42,25 @@ services:
       - DEPLOYED_URL=${DEPLOYED_URL}
       - DAY_THRESHOLD=${DAY_THRESHOLD}
       - LOGIN_REDIRECT_ROUTE=${LOGIN_REDIRECT_ROUTE}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     volumes:
       - sqlite_data:/app/data
     depends_on:
       redis:
         condition: service_healthy
+    networks:
+      - hono-network
     restart: unless-stopped
 
 volumes:
   redis_data:
   sqlite_data:
+
+networks:
+  hono-network:
+    driver: bridge

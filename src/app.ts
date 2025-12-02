@@ -113,6 +113,8 @@ app.route(bullBoardBasePath, serverAdapter.registerPlugin());
 
 app.get("/", (c) => c.text("Nothing here yet!"));
 
+app.get("/health", (c) => c.text("OK"));
+
 showRoutes(app);
 
 await setupDiscordClient();
