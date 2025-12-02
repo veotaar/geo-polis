@@ -20,7 +20,9 @@ export type UserResult = z.infer<typeof userResult>;
 const dataResult = z.object({
 	props: z.object({
 		pageProps: z.object({
-			user: userResult,
+			userProfile: z.object({
+				user: userResult,
+			}),
 		}),
 	}),
 });
@@ -39,7 +41,7 @@ const urlSchema = z.url().refine(
 	},
 );
 
-const extractJson = (html: string) => {
+const extractJson = async (html: string) => {
 	const $ = load(html);
 	const script = $('script#__NEXT_DATA__[type="application/json"]');
 	if (!script.length) {
@@ -54,7 +56,7 @@ const extractJson = (html: string) => {
 	try {
 		const json = JSON.parse(jsonText);
 		const parsedData = dataResult.parse(json);
-		return parsedData.props.pageProps.user;
+		return parsedData.props.pageProps.userProfile.user;
 	} catch (error) {
 		console.error("Failed to parse JSON from script tag:", error);
 		return null;
